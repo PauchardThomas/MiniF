@@ -2,7 +2,7 @@
 
 include('./ConstructionClass.php');
 include('./ConstructionSqlHelper.php');
-
+include('./ConstructionDAO.php');
 menu();
 
 function menu() {
@@ -41,10 +41,11 @@ function createclass() {
 
 
 	$class = new ConstructClass();
-
+	$dao = new ConstructDAO();
 	$className = strval($reponse);
-
+	
 	$class->construction($className,$attributs);
+	$dao->construction($className,$attributs);
 }
 
 function createSqlHelper() {
