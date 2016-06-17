@@ -8,10 +8,14 @@ class ConstructClass {
 
 
 	
-	
+	/**
+	*
+	* Construction de la classe
+	*
+	**/
 	function  construction($className,$attributs){
-		
-		$this->data .= $this->php . 'class '.$className . ' {';
+
+		$this->data .= $this->php . $this->esc . $this->esc . 'class '.$this->upperCase($className) . ' {';
 		$this->data .= $this->esc;	
 		
 		$this->properties($attributs);
@@ -24,7 +28,13 @@ class ConstructClass {
 		
 	}
 	
+	/**
+	*
+	* Construction des attributs
+	*
+	**/
 	function properties($attributs) {
+		
 		foreach($attributs as $att) {
 	
 			$this->data .= $this->esc;
@@ -34,24 +44,12 @@ class ConstructClass {
 			$setter ="";
 			$atributsdata ="";
 			
-			$atributsdata .= '
-			private $' . $att . ';';
+			$atributsdata .= $this->esc .'	private $' . $att . ';';
 			
-			$getter .= "	
-			public function get".$att."()
-			{
-			  return \$this->".$att.";
-			}";
+			$getter .= $this->getter($att);
 			
-			$setter .= "	
-			public function set".$att."($".$att.")
-			{
-			  \$this->".$att." = $".$att.";
-			}";
+			$setter .= $this->setter($att);
 			
-		//****************//
-		//** Construct **//	
-		//**************//
 		$this->data .= $atributsdata;
 		$this->data .= $this->esc;
 		$this->data .= $getter;
@@ -61,11 +59,55 @@ class ConstructClass {
 		}
 	}
 	
+	/**
+	*
+	* Create file
+	*
+	**/
 	function createfile($className) {
-		$monfichier = fopen('./'.$className.'.php', 'w+');
+		file_exists('./Entity') == false ? mkdir('./Entity') : '';
+		$monfichier = fopen('./Entity/'.$this->upperCase($className).'.php', 'w+');
 		fputs($monfichier,$this->data);
 		fclose($monfichier);
 	}
+	
+	/**
+	*
+	* Create getter
+	*
+	**/
+	function getter($att) {
+		$a = $this->upperCase($att);
+		return "	
+	public function get".$a."()
+	{
+		return \$this->".$att.";
+	}";
+	}
+	
+	/**
+	*
+	* Create setter
+	*
+	**/
+	function setter($att) {
+		$a = $this->upperCase($att);
+		return "	
+	public function set".$a."($".$att.")
+	{
+		\$this->".$att." = $".$att.";
+	}";
+	}
+	
+	/**
+	*
+	*UpperCase first letter
+	*
+	**/
+	function upperCase($a) {
+		return ucfirst($a);
+	}
+	
 	
 	
 	
