@@ -38,7 +38,7 @@ class ConstructClass {
 		foreach($attributs as $att) {
 	
 			$this->data .= $this->esc;
-			$this->data .= "##".$att ."##";
+			$this->data .= "	##".$att ."##";
 			
 			$getter ="";
 			$setter ="";

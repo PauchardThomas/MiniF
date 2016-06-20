@@ -3,12 +3,22 @@
 include('./ConstructionClass.php');
 include('./ConstructionSqlHelper.php');
 include('./ConstructionDAO.php');
+
 menu();
 
 function menu() {
-	echo "Menu \r\n";
+	echo "\r\n";
+	echo "\r\n";
+	echo "\r\n";
+	echo "\r\n";
+	echo "		**********\r\n";
+	echo "		** Menu **\r\n";
+	echo "		**********\r\n";
+	echo "\r\n";
+	echo "\r\n";
+	echo "\r\n";
 	echo "1- Create SqlHelper Class \r\n";
-	echo "2- Create  Class \r\n";
+	echo "2- Create  Class + DAO \r\n";
 	echo "Q- Quitter \r\n";
 	$choix = trim(fgets(STDIN));
 	choix($choix);
@@ -35,6 +45,8 @@ function createclass() {
 	 do {
 		 echo'Saisir un attribut ( q = quitter)';
 		 $attribute = trim(fgets(STDIN));
+		 $attribute = str_replace(" ","",$attribute);
+		 echo $attribute;
 		 if($attribute != "q") {array_push($attributs,strval($attribute));}
 	 }while($attribute != "q");
 
@@ -46,6 +58,7 @@ function createclass() {
 	
 	$class->construction($className,$attributs);
 	$dao->construction($className,$attributs);
+	menu();
 }
 
 function createSqlHelper() {

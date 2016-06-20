@@ -18,17 +18,25 @@ class ConstructDAO {
 		$this->data .= $this->esc;
 		$this->data .= "include('./SqlHelper.php');";
 		
-		$this->data .= $this->esc . $this->esc . 'class '.ucfirst($className) . ' {';
+		$this->data .= $this->esc . $this->esc . 'class '.ucfirst($className) . 'DAO {';
 		$this->data .= $this->esc;	
 		$this->data .= $this->esc;
+		
 		
 		$this->construct($className);
 		$this->select($className);
 		$this->data .= $this->esc;
+		
 		$this->insert($className,$attributs);
 		$this->data .= $this->esc;
-		$this->data .= '}';
 		
+		$this->update($className,$attributs);
+		$this->data .= $this->esc;
+		
+		$this->deleteRequest($className,$attributs);
+		$this->data .= $this->esc;
+		
+		$this->data .= '}';
 		$this->createfile($className);
 		
 		
@@ -54,7 +62,7 @@ class ConstructDAO {
 	
 	function insert($className,$attributs) {
 		$this->data .= $this->esc;
-		$this->data .= "	function insert(\$qcm) {".$this->esc." 		\$stmt = sql::\$db->prepare('INSERT INTO ".$className;
+		$this->data .= "	function insert(\$".$className.") {".$this->esc." 		\$stmt = sql::\$db->prepare('INSERT INTO ".$className;
 		$this->data .= $this->constructInsertRequest($className,$attributs);
 	}
 	
@@ -83,19 +91,80 @@ class ConstructDAO {
 		$i = 1;
 		$vals .= ")');";
 		
-		foreach($attributs as $att) {
-			$vals .= $this->esc;
-			$vals .= "		\$stmt->bindParam(':".$att."', \$".$className."->get".ucfirst($att)."());";
-		}
-		$vals .= $this->esc;
+		$vals .= $this->constructParams($className,$attributs);
 		$vals .= "		\$stmt->execute();".$this->esc."
 		return sql::\$db->lastInsertId();
 	}";
-		
 		return $vals;
 	}
 	
-		/**
+	function constructParams($className,$attributs) {
+		$v ="";
+		foreach($attributs as $att) {
+			$v .= $this->esc;
+			$v .= "		\$stmt->bindParam(':".$att."', \$".$className."->get".ucfirst($att)."());";
+		}
+		$v .= $this->esc;
+	
+		return $v;
+	
+	}
+	
+	function update($className,$attributs) {
+		$this->data .= $this->esc;
+		$this->data .= "	function update(\$".$className.") {".$this->esc." 		\$stmt = sql::\$db->prepare('UPDATE ".$className;
+		$this->data .= $this->constructUpdateRequest($className,$attributs);
+	}
+	
+	function constructUpdateRequest($className,$attributs) {
+		$i = 1;
+		$vals =" SET ";
+		
+		foreach($attributs as $att) {
+			if($att != "id") {
+				$vals .= '`' .$att . '` = :'.$att;
+				if($i < count($attributs)) {$vals .= ',';}
+				$i++;
+			}
+		}
+		
+		$vals .= " WHERE `id` = :id  ');";
+
+		
+		$vals .= $this->constructParams($className,$attributs);
+		$vals .= $this->esc;
+		$vals .= "		return \$stmt->rowCount() ? true : false;
+	}";
+		return $vals;
+	}
+	
+	function deleteRequest($className,$attributs) {
+		$this->data .= $this->esc;
+		$this->data .= "	function delete(\$".$className.") {".$this->esc." 		\$stmt = sql::\$db->prepare('DELETE FROM ".$className . " WHERE `id` = :id')";
+		$this->data .= $this->constructDeleteRequest($className,$attributs);
+	}
+	
+	function constructDeleteRequest($className,$attributs) {
+		$v ="";
+		
+		foreach($attributs as $att) {
+			if($att == "id") {
+				$v .= $this->esc;
+				$v .= "		\$stmt->bindParam(':".$att."', \$".$className."->get".ucfirst($att)."());";
+			}
+		}
+		$v .= $this->esc;
+		$v .= "		\$stmt->bindParam(':id', \$".$className."->getId());";
+		$v .= $this->esc;
+		$v .= "		\$stmt->execute();";
+		$v .= $this->esc;
+		$v .= "		return \$stmt->rowCount() ? true : false;
+	}";
+		$v .= $this->esc;
+		return $v;
+	}
+	
+	/**
 	*
 	* Create file
 	*
