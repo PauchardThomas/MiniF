@@ -18,9 +18,9 @@ function menu() {
 	echo "\r\n";
 	echo "\r\n";
 	echo "\r\n";
-	echo "1- Create SqlHelper Class \r\n";
-	echo "2- Create  Class + DAO \r\n";
-	echo "E- Escape \r\n";
+	echo "		1- Create SqlHelper Class \r\n";
+	echo "		2- Create  Class + DAO \r\n";
+	echo "		E- Escape \r\n";
 	$choix = trim(fgets(STDIN));
 	choix($choix);
 }
