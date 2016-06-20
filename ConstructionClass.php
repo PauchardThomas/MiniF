@@ -65,8 +65,8 @@ class ConstructClass {
 	*
 	**/
 	function createfile($className) {
-		file_exists('./Entity') == false ? mkdir('./Entity') : '';
-		$monfichier = fopen('./Entity/'.$this->upperCase($className).'.php', 'w+');
+		file_exists('../Entity') == false ? mkdir('../Entity') : '';
+		$monfichier = fopen('../Entity/'.$this->upperCase($className).'.php', 'w+');
 		fputs($monfichier,$this->data);
 		fclose($monfichier);
 	}

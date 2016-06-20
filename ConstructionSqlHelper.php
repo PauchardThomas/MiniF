@@ -48,8 +48,8 @@ class ConstructSqlHelper {
 	*
 	**/
 	function createfile() {
-		file_exists('./DAO') == false ? mkdir('./DAO') : '';
-		$monfichier = fopen('./DAO/SqlHelper.php', 'w+');
+		file_exists('../DAO') == false ? mkdir('../DAO') : '';
+		$monfichier = fopen('../DAO/SqlHelper.php', 'w+');
 		fputs($monfichier,$this->data);
 		fclose($monfichier);
 	}

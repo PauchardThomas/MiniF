@@ -170,8 +170,8 @@ class ConstructDAO {
 	*
 	**/
 	function createfile($className) {
-		file_exists('./DAO') == false ? mkdir('./DAO') : '';
-		$monfichier = fopen('./DAO/'.ucfirst($className).'DAO.php', 'w+');
+		file_exists('../DAO') == false ? mkdir('../DAO') : '';
+		$monfichier = fopen('../DAO/'.ucfirst($className).'DAO.php', 'w+');
 		fputs($monfichier,$this->data);
 		fclose($monfichier);
 	}
